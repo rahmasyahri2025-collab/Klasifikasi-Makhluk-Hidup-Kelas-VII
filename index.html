@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioQuest: Klasifikasi Makhluk Hidup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; }
+        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .hide { display: none !important; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar-inner { transition: width 1s linear, background-color 0.3s; }
+        .btn-hover { transition: all 0.2s; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #059669; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-teal-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home')">
+                <i class="fa-solid fa-leaf text-2xl text-green-300"></i>
+                <h1 class="text-xl font-bold tracking-tight">BioQuest SMP VII</h1>
+            </div>
+            <div id="nav-status" class="text-sm font-semibold bg-teal-800 px-3 py-1 rounded-full hide">
+                <i class="fa-solid fa-user-astronaut mr-1"></i> Mode Siswa
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl relative">
+        
+        <!-- VIEW: HOME -->
+        <section id="view-home" class="fade-in">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div class="relative bg-teal-900 p-8 text-center text-white overflow-hidden min-h-[250px] flex flex-col justify-center items-center">
+                    <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80" alt="Science Background" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-overlay" onerror="this.src='https://placehold.co/1200x300/134e4a/ffffff?text=Biologi'">
+                    <div class="relative z-10">
+                        <i class="fa-solid fa-microscope text-6xl mb-4 text-green-300 drop-shadow-lg"></i>
+                        <h2 class="text-3xl md:text-5xl font-extrabold mb-3 drop-shadow-md">Petualangan 5 Kingdom</h2>
+                        <p class="text-teal-50 text-lg max-w-2xl mx-auto drop-shadow">Jelajahi keanekaragaman hayati, amati ciri seluler, dan pecahkan misteri makhluk hidup di sekitar kita!</p>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <h3 class="text-xl font-bold mb-3 border-b-2 border-teal-200 pb-2">Tujuan Pembelajaran</h3>
+                    <ul class="list-disc pl-5 mb-6 space-y-1 text-gray-600">
+                        <li>Menganalisis persamaan dan perbedaan ciri makhluk hidup.</li>
+                        <li>Menentukan klasifikasi organisme berdasarkan urutan tingkatan takson.</li>
+                        <li>Memahami karakteristik 5 Kingdom (Monera, Protista, Fungi, Plantae, Animalia).</li>
+                    </ul>
+
+                    <h3 class="text-xl font-bold mb-3 border-b-2 border-teal-200 pb-2">Alur Pembelajaran</h3>
+                    <p class="text-gray-600 mb-6">Pilih modul di bawah ini sesuai dengan urutan pertemuan. Selesaikan materi dan misi pada setiap pertemuan sebelum lanjut ke tahap berikutnya.</p>
+
+                    <div class="grid sm:grid-cols-2 gap-4 mb-6">
+                        <button onclick="startPertemuan(1)" class="btn-hover bg-emerald-500 text-white p-4 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+                            <i class="fa-solid fa-microscope text-3xl"></i>
+                            <span class="font-bold text-lg">Pertemuan 1</span>
+                            <span class="text-xs text-emerald-100">Ciri Makhluk Hidup & Sel</span>
+                        </button>
+                        <button onclick="startPertemuan(2)" class="btn-hover bg-blue-500 text-white p-4 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+                            <i class="fa-solid fa-sitemap text-3xl"></i>
+                            <span class="font-bold text-lg">Pertemuan 2</span>
+                            <span class="text-xs text-blue-100">Taksonomi & Kunci Dikotomi</span>
+                        </button>
+                        <button onclick="startPertemuan(3)" class="btn-hover bg-purple-500 text-white p-4 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+                            <i class="fa-solid fa-layer-group text-3xl"></i>
+                            <span class="font-bold text-lg">Pertemuan 3</span>
+                            <span class="text-xs text-purple-100">Klasifikasi 5 Kingdom</span>
+                        </button>
+                        <button onclick="navigateTo('tgt-lobby')" class="btn-hover bg-amber-500 text-white p-4 rounded-xl flex flex-col items-center justify-center gap-2 text-center">
+                            <i class="fa-solid fa-users-rays text-3xl"></i>
+                            <span class="font-bold text-lg">Pertemuan 4</span>
+                            <span class="text-xs text-amber-100">Turnamen Kelompok (TGT)</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
+                        <p class="text-sm text-gray-600 mb-3">Sudah menyelesaikan semua pertemuan kelas?</p>
+                        <button onclick="navigateTo('mission4')" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg font-bold text-sm btn-hover"><i class="fa-solid fa-pen-to-square mr-2"></i>Mulai Evaluasi Akhir</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: MATERI -->
+        <section id="view-materi" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <h2 id="materi-title" class="text-2xl font-bold text-teal-800"><i class="fa-solid fa-book-open mr-2"></i>Materi Pembelajaran</h2>
+                    <button id="btn-lanjut-misi" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold btn-hover">Lanjut ke Misi <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                </div>
+                
+                <!-- TAB TAKSONOMI -->
+                <div id="tab-takson" class="materi-content space-y-6">
+                    <div class="mb-6 bg-teal-50 p-5 rounded-2xl border border-teal-200 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-white p-3 rounded-xl shadow-sm border border-teal-100">
+                                <i class="fa-solid fa-file-pdf text-3xl text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-teal-900 text-lg">Modul & LKM: Taksonomi & Kunci Dikotomi</h4>
+                                <p class="text-sm text-teal-700">Unduh modul materi dan Lembar Kerja Murid (LKM) Pertemuan 2.</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <a href="#" target="_blank" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-book"></i> Modul
+                            </a>
+                            <a href="LKM PERTEMUAN 2 TINGKATAN TAKSONOMI.pdf" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-file-pen"></i> LKM 2
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-emerald-700 mb-3">Tingkatan Takson (Carolus Linnaeus)</h3>
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            <div class="flex-1 space-y-4">
+                                <p class="text-gray-700">Taksonomi adalah cabang biologi yang mempelajari klasifikasi makhluk hidup. Urutan dari yang terbesar (paling umum) ke terkecil (paling spesifik):</p>
+                                <div class="bg-emerald-50 p-4 rounded-xl border-l-4 border-emerald-500 font-bold text-emerald-900 text-sm md:text-base">
+                                    Kingdom &rarr; Filum (Hewan) / Divisi (Tumbuhan) &rarr; Kelas &rarr; Ordo &rarr; Famili &rarr; Genus &rarr; Spesies
+                                </div>
+                                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                    <p class="text-sm text-blue-800">"Semakin tinggi takson, anggotanya semakin <strong>banyak</strong> tapi persamaan cirinya <strong>sedikit</strong>. Semakin rendah takson (mendekati spesies), anggotanya <strong>sedikit</strong> tapi persamaan cirinya <strong>banyak</strong>."</p>
+                                </div>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1500829243541-74b677fecc30?auto=format&fit=crop&w=400&q=80" alt="Keanekaragaman Hayati" class="w-full md:w-1/3 h-48 object-cover rounded-xl shadow-md border-2 border-teal-100" onerror="this.src='https://placehold.co/400x300/e0f2fe/0369a1?text=Taksonomi'">
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-200">
+                        <h4 class="font-bold text-lg text-emerald-700 mb-3">Sistem Tata Nama Ganda (Binomial Nomenklatur)</h4>
+                        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+                            <ul class="list-disc pl-5 space-y-2 text-gray-700 text-sm flex-1">
+                                <li>Terdiri dari dua kata (Bahasa Latin / dilatinkan).</li>
+                                <li>Kata <strong>pertama</strong> menunjukkan <strong>Genus</strong> (diawali huruf besar).</li>
+                                <li>Kata <strong>kedua</strong> menunjukkan penunjuk <strong>Spesies</strong> (diawali huruf kecil).</li>
+                                <li>Dicetak <em>miring</em> (italic) atau <u>digarisbawahi</u> secara terpisah jika ditulis tangan.</li>
+                                <li>Contoh: <em>Zea mays</em> (Jagung), <em>Felis catus</em> (Kucing).</li>
+                            </ul>
+                            <img src="https://images.unsplash.com/photo-1581084323265-4f3659e2f470?auto=format&fit=crop&w=300&q=80" class="w-32 h-32 object-cover rounded-full border-4 border-teal-100 shadow">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB SEL -->
+                <div id="tab-sel" class="materi-content hide space-y-6">
+                    <div class="mb-6 bg-teal-50 p-5 rounded-2xl border border-teal-200 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-white p-3 rounded-xl shadow-sm border border-teal-100">
+                                <i class="fa-solid fa-file-pdf text-3xl text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-teal-900 text-lg">Modul & LKM: Ciri Makhluk Hidup & Sel</h4>
+                                <p class="text-sm text-teal-700">Unduh modul materi dan Lembar Kerja Murid (LKM) Pertemuan 1.</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <a href="#" target="_blank" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-book"></i> Modul
+                            </a>
+                            <a href="LKM PERTEMUAN 1 - inkuiri kolaboratif.pdf" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-file-pen"></i> LKM 1
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-emerald-700 mb-3">Tipe Sel: Prokariotik vs Eukariotik</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-5 rounded-2xl border border-red-100 flex flex-col hover:shadow-md transition">
+                                <img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=400&q=80" alt="Sel Prokariotik" class="w-full h-40 object-cover rounded-xl mb-4 shadow-sm" onerror="this.src='https://placehold.co/400x300/fef2f2/b91c1c?text=Prokariotik'">
+                                <h4 class="font-bold text-red-700 text-lg mb-2"><i class="fa-solid fa-bacteria mr-2"></i>Sel Prokariotik</h4>
+                                <ul class="text-sm text-gray-700 flex-grow list-disc pl-4 space-y-1">
+                                    <li><strong>Tidak memiliki membran inti sel</strong> (materi genetik tercampur di sitoplasma).</li>
+                                    <li>Struktur sangat sederhana, tidak memiliki organel kompleks (seperti mitokondria).</li>
+                                    <li>Ditemukan pada Kingdom <strong>Monera</strong> (Bakteri & Cyanobacteria).</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-5 rounded-2xl border border-green-100 flex flex-col hover:shadow-md transition">
+                                <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=400&q=80" alt="Sel Eukariotik" class="w-full h-40 object-cover rounded-xl mb-4 shadow-sm" onerror="this.src='https://placehold.co/400x300/f0fdf4/15803d?text=Eukariotik'">
+                                <h4 class="font-bold text-green-700 text-lg mb-2"><i class="fa-solid fa-dna mr-2"></i>Sel Eukariotik</h4>
+                                <ul class="text-sm text-gray-700 flex-grow list-disc pl-4 space-y-1">
+                                    <li><strong>Memiliki membran inti sel sejati</strong> (DNA aman di dalam nukleus).</li>
+                                    <li>Memiliki organel-organel sel yang lengkap dan kompleks.</li>
+                                    <li>Ditemukan pada Kingdom <strong>Protista, Fungi, Plantae, Animalia</strong>.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-200">
+                        <h3 class="text-xl font-bold text-emerald-700 mb-3">Berdasarkan Jumlah Sel</h3>
+                        <div class="flex gap-4">
+                            <div class="bg-blue-50 p-4 rounded-xl flex-1 border border-blue-100">
+                                <strong class="text-blue-800">Uniseluler (Bersel Tunggal)</strong>
+                                <p class="text-sm text-gray-600 mt-1">Seluruh aktivitas hidup dilakukan oleh satu sel itu saja. Contoh: Amoeba, Paramecium, Bakteri.</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-xl flex-1 border border-purple-100">
+                                <strong class="text-purple-800">Multiseluler (Bersel Banyak)</strong>
+                                <p class="text-sm text-gray-600 mt-1">Tersusun atas banyak sel yang membentuk jaringan dan organ. Contoh: Tumbuhan, Hewan, Manusia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB KINGDOM -->
+                <div id="tab-kingdom" class="materi-content hide space-y-6">
+                    <div class="mb-6 bg-teal-50 p-5 rounded-2xl border border-teal-200 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-white p-3 rounded-xl shadow-sm border border-teal-100">
+                                <i class="fa-solid fa-file-pdf text-3xl text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-teal-900 text-lg">Modul & LKM: Klasifikasi 5 Kingdom</h4>
+                                <p class="text-sm text-teal-700">Unduh modul materi dan Lembar Kerja Murid (LKM) Pertemuan 3.</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <a href="#" target="_blank" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-book"></i> Modul
+                            </a>
+                            <a href="LKM PERTEMUAN 3 TINGKATAN TAKSONOMI.pdf" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-all flex items-center gap-2 whitespace-nowrap btn-hover justify-center">
+                                <i class="fa-solid fa-file-pen"></i> LKM 3
+                            </a>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-emerald-700 mb-4">Karakteristik 5 Kingdom (R.H. Whittaker)</h3>
+                    <div class="space-y-4">
+                        
+                        <!-- Monera -->
+                        <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                            <img src="https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=200&q=80" class="w-full md:w-32 h-32 rounded-xl object-cover shadow-sm">
+                            <div>
+                                <h4 class="text-lg font-bold text-teal-800">1. Kingdom Monera</h4>
+                                <p class="text-sm text-gray-700">Organisme paling primitif. <strong>Prokariotik</strong> dan <strong>Uniseluler</strong>. Bereproduksi secara vegetatif (membelah diri).</p>
+                                <p class="text-sm text-gray-700 mt-2"><strong>Kelompok:</strong> <br>
+                                - <em>Bakteri:</em> Ada yang menguntungkan (Lactobacillus untuk yogurt) dan merugikan (Salmonella penyebab tifus). <br>
+                                - <em>Alga Biru (Cyanobacteria):</em> Memiliki klorofil untuk fotosintesis (contoh: Spirulina).</p>
+                            </div>
+                        </div>
+
+                        <!-- Protista -->
+                        <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                            <img src="https://images.unsplash.com/photo-1614936496996-03c00cb75d65?auto=format&fit=crop&w=200&q=80" class="w-full md:w-32 h-32 rounded-xl object-cover shadow-sm">
+                            <div>
+                                <h4 class="text-lg font-bold text-teal-800">2. Kingdom Protista</h4>
+                                <p class="text-sm text-gray-700">Sudah <strong>Eukariotik</strong>, sebagian besar Uniseluler tapi ada yang Multiseluler (seperti rumput laut).</p>
+                                <p class="text-sm text-gray-700 mt-2"><strong>Kelompok:</strong> <br>
+                                - <em>Protista mirip hewan (Protozoa):</em> Amoeba, Paramecium, Plasmodium.<br>
+                                - <em>Protista mirip tumbuhan (Alga):</em> Euglena, Alga hijau, Alga merah.<br>
+                                - <em>Protista mirip jamur:</em> Jamur lendir.</p>
+                            </div>
+                        </div>
+
+                        <!-- Fungi -->
+                        <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                            <img src="https://images.unsplash.com/photo-1611073052081-5f07323871de?auto=format&fit=crop&w=200&q=80" class="w-full md:w-32 h-32 rounded-xl object-cover shadow-sm">
+                            <div>
+                                <h4 class="text-lg font-bold text-teal-800">3. Kingdom Fungi (Jamur)</h4>
+                                <p class="text-sm text-gray-700"><strong>Eukariotik</strong>, dinding sel terbuat dari zat <strong>kitin</strong>, dan <strong>Heterotrof</strong> (tidak bisa fotosintesis, menyerap nutrisi dari lingkungan/saprofit).</p>
+                                <p class="text-sm text-gray-700 mt-2">Tubuhnya tersusun atas benang-benang halus yang disebut <strong>hifa</strong>, yang membentuk anyaman <strong>miselium</strong>. Berkembang biak umumnya dengan <strong>spora</strong>. Contoh: Jamur tempe (Rhizopus), Jamur kancing, Ragi (Saccharomyces).</p>
+                            </div>
+                        </div>
+
+                        <!-- Plantae -->
+                        <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                            <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=200&q=80" class="w-full md:w-32 h-32 rounded-xl object-cover shadow-sm">
+                            <div>
+                                <h4 class="text-lg font-bold text-teal-800">4. Kingdom Plantae (Tumbuhan)</h4>
+                                <p class="text-sm text-gray-700"><strong>Eukariotik</strong>, <strong>Multiseluler</strong>, dinding sel terbuat dari <strong>selulosa</strong>, dan <strong>Autotrof</strong> (memiliki klorofil untuk fotosintesis).</p>
+                                <p class="text-sm text-gray-700 mt-2"><strong>Klasifikasi Utama:</strong> <br>
+                                - <em>Tumbuhan Lumut (Bryophyta):</em> Belum memiliki pembuluh angkut sejati, reproduksi spora.<br>
+                                - <em>Tumbuhan Paku (Pteridophyta):</em> Punya pembuluh angkut, reproduksi spora.<br>
+                                - <em>Tumbuhan Berbiji (Spermatophyta):</em> Terbuka (Gymnospermae - spt Pinus) dan Tertutup (Angiospermae - spt Mangga). Angiospermae dibagi lagi jadi <strong>Dikotil</strong> dan <strong>Monokotil</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Animalia -->
+                        <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-200">
+                            <img src="https://images.unsplash.com/photo-1555169062-0133ab5ee798?auto=format&fit=crop&w=200&q=80" class="w-full md:w-32 h-32 rounded-xl object-cover shadow-sm">
+                            <div>
+                                <h4 class="text-lg font-bold text-teal-800">5. Kingdom Animalia (Hewan)</h4>
+                                <p class="text-sm text-gray-700"><strong>Eukariotik</strong>, <strong>Multiseluler</strong>, <strong>tidak berdinding sel</strong>, <strong>Heterotrof</strong>, dan bisa bergerak aktif.</p>
+                                <p class="text-sm text-gray-700 mt-2"><strong>Klasifikasi Utama:</strong> <br>
+                                - <em>Invertebrata (Tanpa Tulang Belakang):</em> Porifera (Spons), Coelenterata (Ubur-ubur), Vermes (Cacing), Mollusca (Siput/Cumi), Arthropoda (Serangga/Laba-laba), Echinodermata (Bintang laut).<br>
+                                - <em>Vertebrata (Bertulang Belakang):</em> Pisces (Ikan), Amphibia (Katak), Reptilia (Buaya/Ular), Aves (Burung), Mammalia (Menyusui - spt Kucing, Paus, Manusia).</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: MISSION 1 -->
+        <section id="view-mission1" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-emerald-100 text-emerald-600 p-3 rounded-full"><i class="fa-solid fa-microscope text-xl"></i></div>
+                    <h2 class="text-2xl font-bold text-gray-800">Misi Pertemuan 1: Detektif Ciri Kehidupan</h2>
+                </div>
+                <p class="mb-4 text-gray-600">Amati "tersangka" di bawah ini. Apakah ia makhluk hidup? Beri tanda centang pada bukti yang sesuai!</p>
+                
+                <div class="bg-gray-100 p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 mb-6">
+                    <img src="https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&w=300&q=80" alt="Virus" class="w-32 h-32 md:w-48 md:h-48 object-cover rounded-full border-4 border-red-300 shadow-lg" onerror="this.src='https://placehold.co/300x300/fee2e2/ef4444?text=Virus'">
+                    <div class="text-center md:text-left">
+                        <h3 class="font-bold text-2xl mb-2 text-red-600"><i class="fa-solid fa-virus-covid mr-2"></i>Virus (Bacteriophage)</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">Ditemukan menempel pada sel bakteri inang. Hasil analisis mikroskop menunjukkan ia tidak memiliki sitoplasma, organel, maupun membran sel. Hanya tersusun atas selubung protein dan asam nukleat.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 mb-6" id="m1-options">
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" value="dna" class="mr-3 w-5 h-5 text-teal-600"> Memiliki materi genetik (DNA/RNA)
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" value="metabolisme" class="mr-3 w-5 h-5 text-teal-600"> Dapat melakukan metabolisme secara mandiri
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" value="sel" class="mr-3 w-5 h-5 text-teal-600"> Tersusun atas sel yang lengkap
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="checkbox" value="kristal" class="mr-3 w-5 h-5 text-teal-600"> Dapat dikristalkan di luar sel inang
+                    </label>
+                </div>
+
+                <button onclick="checkMission1()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-lg btn-hover">Kirim Analisis</button>
+            </div>
+        </section>
+
+        <!-- VIEW: MISSION 2 -->
+        <section id="view-mission2" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-purple-100 text-purple-600 p-3 rounded-full"><i class="fa-solid fa-layer-group text-xl"></i></div>
+                    <h2 class="text-2xl font-bold text-gray-800">Misi Pertemuan 3: Rahasia Lima Kingdom</h2>
+                </div>
+                <p class="mb-4 text-gray-600">Pilih kingdom yang tepat untuk organisme yang ditampilkan!</p>
+
+                <div class="text-center mb-8">
+                    <div id="m2-organism-card" class="bg-teal-50 p-6 rounded-3xl border-2 border-teal-200 inline-block w-full max-w-sm shadow-md transition-all">
+                        <img id="m2-org-img" src="" alt="Organisme" class="w-full h-48 object-cover rounded-2xl mb-4 shadow-sm" onerror="this.src='https://placehold.co/400x300/ccfbf1/0f766e?text=Organisme'">
+                        <h3 id="m2-org-name" class="text-2xl font-bold text-teal-900 mb-2">Escherichia coli</h3>
+                        <p id="m2-org-desc" class="text-sm text-teal-700 italic">Prokariotik, Uniseluler, Dinding sel peptidoglikan.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6" id="m2-kingdom-btns">
+                    <button onclick="checkMission2('Monera')" class="bg-gray-100 hover:bg-teal-100 border p-3 rounded-lg font-semibold btn-hover">Monera</button>
+                    <button onclick="checkMission2('Protista')" class="bg-gray-100 hover:bg-teal-100 border p-3 rounded-lg font-semibold btn-hover">Protista</button>
+                    <button onclick="checkMission2('Fungi')" class="bg-gray-100 hover:bg-teal-100 border p-3 rounded-lg font-semibold btn-hover">Fungi</button>
+                    <button onclick="checkMission2('Plantae')" class="bg-gray-100 hover:bg-teal-100 border p-3 rounded-lg font-semibold btn-hover">Plantae</button>
+                    <button onclick="checkMission2('Animalia')" class="bg-gray-100 hover:bg-teal-100 border p-3 rounded-lg font-semibold btn-hover">Animalia</button>
+                </div>
+                <div class="text-center text-sm text-gray-500">Organisme <span id="m2-progress">1/4</span></div>
+            </div>
+        </section>
+
+        <!-- VIEW: MISSION 3 -->
+        <section id="view-mission3" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-blue-100 text-blue-600 p-3 rounded-full"><i class="fa-solid fa-sitemap text-xl"></i></div>
+                    <h2 class="text-2xl font-bold text-gray-800">Misi Pertemuan 2: Pecahkan Kunci Determinasi</h2>
+                </div>
+                <p class="mb-6 text-gray-600">Gunakan kunci determinasi sederhana ini untuk mengidentifikasi <strong>Kucing (Felis catus)</strong>.</p>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-6">
+                    <div class="w-full md:w-2/5">
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80" alt="Kucing" class="w-full h-56 md:h-full object-cover rounded-2xl shadow-md border-4 border-orange-100" onerror="this.src='https://placehold.co/400x400/ffedd5/c2410c?text=Kucing'">
+                    </div>
+                    <div class="w-full md:w-3/5 bg-yellow-50 border border-yellow-200 p-5 rounded-2xl flex flex-col justify-center">
+                        <h3 id="m3-question-id" class="text-xl font-bold text-yellow-800 mb-4">1. Tulang Belakang</h3>
+                        <div class="space-y-3">
+                            <button onclick="checkMission3('a')" class="w-full text-left bg-white p-4 border rounded-xl hover:bg-yellow-100 btn-hover shadow-sm transition-colors">
+                                <span id="m3-opt-a-text" class="font-semibold text-gray-800">1a. Memiliki tulang belakang (Vertebrata)</span>
+                            </button>
+                            <button onclick="checkMission3('b')" class="w-full text-left bg-white p-4 border rounded-xl hover:bg-yellow-100 btn-hover shadow-sm transition-colors">
+                                <span id="m3-opt-b-text" class="font-semibold text-gray-800">1b. Tidak memiliki tulang belakang (Invertebrata)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: MISSION 4 (Evaluasi) -->
+        <section id="view-mission4" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-gray-800 text-white p-3 rounded-full"><i class="fa-solid fa-pen-to-square text-xl"></i></div>
+                    <h2 class="text-2xl font-bold text-gray-800">Evaluasi Akhir</h2>
+                </div>
+                
+                <div id="m4-quiz-container">
+                    <p class="text-sm font-semibold text-gray-500 mb-2">Soal <span id="m4-q-num">1</span> dari 5</p>
+                    <h3 id="m4-question" class="text-lg font-bold mb-4">...</h3>
+                    <div id="m4-options" class="space-y-3">
+                        <!-- Options generated here -->
+                    </div>
+                </div>
+                
+                <div id="m4-results" class="hide text-center">
+                    <i class="fa-solid fa-trophy text-6xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">Evaluasi Selesai!</h3>
+                    <p class="text-lg mb-6">Skor Anda: <span id="m4-score" class="font-bold text-teal-600 text-2xl">0</span>/100</p>
+                    <button onclick="navigateTo('recap')" class="bg-teal-600 text-white px-6 py-3 rounded-lg font-bold btn-hover">Lihat Rekap & Refleksi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: TGT LOBBY -->
+        <section id="view-tgt-lobby" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 border-t-8 border-amber-500">
+                
+                <!-- TGT Banner -->
+                <div class="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-8 shadow-md">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80" alt="Turnamen TGT" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-amber-900/90 to-amber-600/50 flex flex-col justify-center p-6 md:p-10">
+                        <h2 class="text-3xl md:text-5xl font-black text-white mb-3 drop-shadow-lg"><i class="fa-solid fa-gamepad mr-3"></i>Lobby TGT</h2>
+                        <p class="text-amber-100 text-sm md:text-lg max-w-xl drop-shadow-md">Team Games Tournament! Masing-masing kelompok dapat <strong>langsung</strong> memulai kompetisi pada saat yang sama. Tidak perlu menunggu kelompok lain. Siapkan strategi untuk menjawab 40 Soal Tercepat!</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-6">
+                    <p class="text-gray-600">Pilih tombol kelompokmu! <strong>Satu perangkat hanya untuk satu peran/kelompok.</strong></p>
+                </div>
+
+                <!-- 3x3 Grid untuk 9 Kolom (1 Guru + 8 Kelompok) -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="tgt-group-grid">
+                    <!-- Dinamis digenerate oleh JS -->
+                </div>
+                
+                <div class="mt-8 p-4 bg-red-50 text-red-800 text-sm rounded-lg flex gap-3 items-start">
+                    <i class="fa-solid fa-circle-exclamation mt-1"></i>
+                    <p><strong>Aturan Turnamen:</strong> 40 Soal (Mudah - Sulit). Benar + Cepat (< 15/25 detik) = Skor 100. Benar lambat = Skor 90. Salah = Skor 0. Pertandingan berjalan <em>real-time</em> secara lokal di perangkat masing-masing.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: TGT GAME -->
+        <section id="view-tgt-game" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 border-t-8 border-amber-500 relative overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="bg-amber-100 text-amber-800 px-4 py-1 rounded-full font-bold">Kelompok <span id="tgt-current-group">X</span></div>
+                    <div class="font-bold text-gray-500">Skor: <span id="tgt-score-display" class="text-amber-600 text-xl">0</span></div>
+                </div>
+
+                <div class="flex justify-between text-sm mb-1 font-semibold text-gray-600">
+                    <span>Soal <span id="tgt-q-num">1</span>/40 (<span id="tgt-q-diff">Mudah</span>)</span>
+                    <span id="tgt-timer-text" class="text-red-500">01:00</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                    <div id="tgt-timer-bar" class="bg-red-500 h-2.5 rounded-full progress-bar-inner" style="width: 100%"></div>
+                </div>
+
+                <div class="min-h-[200px] flex flex-col justify-center">
+                    <h3 id="tgt-question" class="text-xl md:text-2xl font-bold mb-6 text-center text-gray-800">Memuat soal...</h3>
+                    <div id="tgt-options" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Options generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: TEACHER DASHBOARD -->
+        <section id="view-tgt-teacher" class="hide fade-in">
+            <div class="bg-slate-900 rounded-3xl shadow-xl p-6 md:p-8 border-t-8 border-teal-500 text-white">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-teal-300 mb-2"><i class="fa-solid fa-chalkboard-user mr-3"></i>Dashboard Guru TGT</h2>
+                        <p class="text-slate-400 text-sm">Simulasi pemantauan skor 8 Kelompok secara Real-Time.</p>
+                    </div>
+                    <button onclick="resetTGTGame()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-bold transition flex items-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Turnamen
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="teacher-scores-grid">
+                    <!-- Skor Kelompok (Mock) -->
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="navigateTo('home')" class="text-teal-400 hover:text-white underline text-sm transition">Kembali ke Beranda Utama</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: RECAP -->
+        <section id="view-recap" class="hide fade-in">
+            <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+                <h2 class="text-3xl font-extrabold text-center text-teal-800 mb-6">Rekapitulasi Belajar</h2>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-teal-50 p-6 rounded-2xl border border-teal-200">
+                        <h3 class="font-bold text-lg mb-2 text-teal-900">Hasil Evaluasi Individu</h3>
+                        <p class="text-4xl font-black text-teal-600 mb-2"><span id="recap-score">0</span>%</p>
+                        <p id="recap-suggestion" class="text-sm text-teal-800">Saran: ...</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-200">
+                        <h3 class="font-bold text-lg mb-4 text-blue-900">Refleksi Diri Hari Ini</h3>
+                        <textarea id="reflection-text" class="w-full h-24 p-3 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" placeholder="Apa yang paling menarik kamu pelajari hari ini? Apakah ada yang masih membingungkan?"></textarea>
+                        <button onclick="saveReflection()" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold w-full btn-hover">Simpan Refleksi</button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button onclick="location.reload()" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold btn-hover"><i class="fa-solid fa-rotate-right mr-2"></i>Kembali ke Beranda</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CUSTOM MODAL -->
+    <div id="custom-modal" class="fixed inset-0 z-[100] flex items-center justify-center hide bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-6 md:p-8 max-w-md w-full mx-4 shadow-2xl transform transition-transform scale-95" id="modal-content-box">
+            <div class="text-center">
+                <div id="modal-icon" class="text-5xl mb-4"></div>
+                <h3 id="modal-title" class="text-2xl font-bold mb-2">Title</h3>
+                <p id="modal-desc" class="text-gray-600 mb-6">Description</p>
+                <button id="modal-btn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg w-full btn-hover">Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBAL STATE ---
+        let currentView = 'home';
+        let userScores = { m4: 0, tgt: 0 };
+        
+        // Modal logic
+        const modal = document.getElementById('custom-modal');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalBtn = document.getElementById('modal-btn');
+        const modalBox = document.getElementById('modal-content-box');
+        
+        function showModal(title, desc, type, callback = null) {
+            modalTitle.innerText = title;
+            modalDesc.innerHTML = desc;
+            
+            if(type === 'success') {
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-500"></i>';
+                modalBtn.className = 'bg-green-600 text-white font-bold py-2 px-6 rounded-lg w-full btn-hover';
+            } else if(type === 'error') {
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-500"></i>';
+                modalBtn.className = 'bg-red-600 text-white font-bold py-2 px-6 rounded-lg w-full btn-hover';
+            } else {
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-info text-blue-500"></i>';
+                modalBtn.className = 'bg-blue-600 text-white font-bold py-2 px-6 rounded-lg w-full btn-hover';
+            }
+
+            modal.classList.remove('hide');
+            setTimeout(() => { modalBox.classList.remove('scale-95'); modalBox.classList.add('scale-100'); }, 10);
+            
+            modalBtn.onclick = () => {
+                modalBox.classList.remove('scale-100'); modalBox.classList.add('scale-95');
+                setTimeout(() => { modal.classList.add('hide'); if(callback) callback(); }, 200);
+            };
+        }
+
+        function navigateTo(viewId) {
+            const views = ['home', 'materi', 'mission1', 'mission2', 'mission3', 'mission4', 'tgt-lobby', 'tgt-game', 'tgt-teacher', 'recap'];
+            views.forEach(v => document.getElementById(`view-${v}`).classList.add('hide'));
+            document.getElementById(`view-${viewId}`).classList.remove('hide');
+            currentView = viewId;
+            window.scrollTo(0,0);
+        }
+
+        // --- PERTEMUAN LOGIC ---
+        function startPertemuan(num) {
+            document.getElementById('nav-status').classList.remove('hide');
+            
+            // Sembunyikan semua konten materi
+            document.querySelectorAll('.materi-content').forEach(content => content.classList.add('hide'));
+            
+            const materiTitle = document.getElementById('materi-title');
+            const btnLanjut = document.getElementById('btn-lanjut-misi');
+
+            if (num === 1) {
+                materiTitle.innerHTML = '<i class="fa-solid fa-microscope mr-2"></i>Materi Pertemuan 1: Ciri Makhluk Hidup & Sel';
+                document.getElementById('tab-sel').classList.remove('hide');
+                btnLanjut.onclick = () => navigateTo('mission1');
+                btnLanjut.innerHTML = 'Lanjut ke Misi <i class="fa-solid fa-arrow-right ml-1"></i>';
+            } else if (num === 2) {
+                materiTitle.innerHTML = '<i class="fa-solid fa-sitemap mr-2"></i>Materi Pertemuan 2: Taksonomi & Kunci Dikotomi';
+                document.getElementById('tab-takson').classList.remove('hide');
+                btnLanjut.onclick = () => navigateTo('mission3'); // Misi Kunci Determinasi
+                btnLanjut.innerHTML = 'Lanjut ke Misi <i class="fa-solid fa-arrow-right ml-1"></i>';
+            } else if (num === 3) {
+                materiTitle.innerHTML = '<i class="fa-solid fa-layer-group mr-2"></i>Materi Pertemuan 3: Klasifikasi 5 Kingdom';
+                document.getElementById('tab-kingdom').classList.remove('hide');
+                btnLanjut.onclick = () => navigateTo('mission2'); // Misi 5 Kingdom
+                btnLanjut.innerHTML = 'Lanjut ke Misi <i class="fa-solid fa-arrow-right ml-1"></i>';
+            }
+
+            navigateTo('materi');
+        }
+
+        // --- MISSION 1 LOGIC ---
+        function checkMission1() {
+            const checked = Array.from(document.querySelectorAll('#m1-options input:checked')).map(cb => cb.value);
+            if(checked.includes('dna') && checked.includes('kristal') && !checked.includes('metabolisme') && !checked.includes('sel')) {
+                showModal("Tepat Sekali!", "Virus hanya memiliki DNA/RNA dan selubung protein. Ia bisa dikristalkan (benda mati di luar sel) dan tidak bisa bermetabolisme sendiri. Oleh karena itu, <strong>Virus berada di antara benda mati dan hidup</strong>.<br><br><strong>Misi Pertemuan 1 Selesai!</strong>", "success", () => navigateTo('home'));
+            } else {
+                showModal("Belum Tepat", "Perhatikan kembali! Virus tidak tersusun atas sel dan tidak bisa bermetabolisme secara mandiri. Ia bisa dikristalkan lho.", "error");
+            }
+        }
+
+        // --- MISSION 2 LOGIC ---
+        const m2Organisms = [
+            { name: "Escherichia coli", desc: "Prokariotik, Uniseluler.", correct: "Monera", img: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?auto=format&fit=crop&w=400&q=80" },
+            { name: "Amoeba", desc: "Eukariotik, Uniseluler, Bergerak dengan kaki semu.", correct: "Protista", img: "https://images.unsplash.com/photo-1614936496996-03c00cb75d65?auto=format&fit=crop&w=400&q=80" },
+            { name: "Jamur Tiram", desc: "Eukariotik, Multiseluler, Menyerap nutrisi (Heterotrof), Dinding sel kitin.", correct: "Fungi", img: "https://images.unsplash.com/photo-1611073052081-5f07323871de?auto=format&fit=crop&w=400&q=80" },
+            { name: "Pohon Mangga", desc: "Eukariotik, Multiseluler, Fotosintesis, Dinding sel selulosa.", correct: "Plantae", img: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=400&q=80" }
+        ];
+        let m2Index = 0;
+
+        function loadM2() {
+            const org = m2Organisms[m2Index];
+            document.getElementById('m2-org-name').innerText = org.name;
+            document.getElementById('m2-org-desc').innerText = org.desc;
+            document.getElementById('m2-org-img').src = org.img;
+            document.getElementById('m2-progress').innerText = `${m2Index + 1}/${m2Organisms.length}`;
+        }
+
+        function checkMission2(selected) {
+            const org = m2Organisms[m2Index];
+            if(selected === org.correct) {
+                showModal("Benar!", `${org.name} termasuk dalam Kingdom ${org.correct}.`, "success", () => {
+                    m2Index++;
+                    if(m2Index < m2Organisms.length) loadM2();
+                    else showModal("Luar Biasa!", "Kamu sudah memahami dasar pengelompokan 5 Kingdom!<br><br><strong>Misi Pertemuan 3 Selesai!</strong>", "success", () => navigateTo('home'));
+                });
+            } else {
+                showModal("Salah", `Coba lagi. Perhatikan ciri-ciri sel dan cara makan dari ${org.name}.`, "error");
+            }
+        }
+        loadM2();
+
+        // --- MISSION 3 LOGIC ---
+        const m3Flow = {
+            start: { id: "1. Tulang Belakang", aText: "1a. Memiliki tulang belakang (Vertebrata) -> Lanjut ke No 2", bText: "1b. Tidak memiliki tulang belakang (Invertebrata) -> Cacing, Serangga", aNext: "step2", bNext: "wrong" },
+            step2: { id: "2. Suhu Tubuh", aText: "2a. Berdarah panas (Suhu tubuh tetap) -> Lanjut ke No 3", bText: "2b. Berdarah dingin (Suhu tubuh berubah) -> Ikan, Katak, Reptil", aNext: "step3", bNext: "wrong" },
+            step3: { id: "3. Penutup Tubuh & Reproduksi", aText: "3a. Tubuh ditutupi bulu, bertelur -> Aves (Burung)", bText: "3b. Tubuh ditutupi rambut, menyusui (Vivipar) -> Mamalia", aNext: "wrong", bNext: "win" }
+        };
+        let currentM3Step = "start";
+
+        function loadM3() {
+            const step = m3Flow[currentM3Step];
+            document.getElementById('m3-question-id').innerText = step.id;
+            document.getElementById('m3-opt-a-text').innerText = step.aText;
+            document.getElementById('m3-opt-b-text').innerText = step.bText;
+        }
+
+        function checkMission3(choice) {
+            const step = m3Flow[currentM3Step];
+            const next = choice === 'a' ? step.aNext : step.bNext;
+            
+            if(next === 'wrong') {
+                showModal("Identifikasi Salah", "Kucing tidak termasuk dalam kelompok tersebut. Mari ulang dari awal.", "error", () => { currentM3Step = 'start'; loadM3(); });
+            } else if(next === 'win') {
+                showModal("Berhasil!", "Tepat! Berdasarkan kunci determinasi: 1a -> 2a -> 3b. Kucing adalah <strong>Mamalia</strong>.<br><br><strong>Misi Pertemuan 2 Selesai!</strong>", "success", () => navigateTo('home'));
+            } else {
+                currentM3Step = next;
+                loadM3();
+            }
+        }
+        loadM3();
+
+        // --- MISSION 4 LOGIC ---
+        const m4Questions = [
+            { q: "Ilmuwan yang dijuluki sebagai Bapak Taksonomi adalah...", opts: ["R.H. Whittaker", "Carolus Linnaeus", "Charles Darwin", "Ernst Haeckel"], ans: 1 },
+            { q: "Urutan taksonomi pada tumbuhan dari yang tertinggi ke terendah adalah...", opts: ["Kingdom - Filum - Kelas - Ordo - Famili - Genus - Spesies", "Kingdom - Divisi - Ordo - Kelas - Famili - Genus - Spesies", "Kingdom - Divisi - Kelas - Ordo - Famili - Genus - Spesies", "Spesies - Genus - Famili - Ordo - Kelas - Divisi - Kingdom"], ans: 2 },
+            { q: "Organisme uniseluler prokariotik dikelompokkan ke dalam kingdom...", opts: ["Protista", "Monera", "Fungi", "Plantae"], ans: 1 },
+            { q: "Padi, Jagung, dan Kelapa memiliki akar serabut dan tulang daun sejajar. Mereka termasuk dalam kelas...", opts: ["Dikotil", "Monokotil", "Gymnospermae", "Pteridophyta"], ans: 1 },
+            { q: "Ciri khas yang membedakan Fungi (Jamur) dengan Plantae (Tumbuhan) adalah...", opts: ["Fungi eukariotik, Plantae prokariotik", "Fungi memiliki klorofil, Plantae tidak", "Fungi berdinding sel kitin & heterotrof, Plantae berselulosa & autotrof", "Fungi bergerak aktif, Plantae pasif"], ans: 2 }
+        ];
+        let m4Index = 0;
+        let m4Correct = 0;
+
+        function loadM4() {
+            if(m4Index >= m4Questions.length) {
+                document.getElementById('m4-quiz-container').classList.add('hide');
+                document.getElementById('m4-results').classList.remove('hide');
+                const score = (m4Correct / m4Questions.length) * 100;
+                document.getElementById('m4-score').innerText = score;
+                document.getElementById('recap-score').innerText = score;
+                
+                let sugg = "";
+                if(score >= 80) sugg = "Luar biasa! Pemahamanmu sangat kuat.";
+                else if(score >= 60) sugg = "Cukup baik, pelajari lagi materi terkait ciri spesifik antar Kingdom.";
+                else sugg = "Jangan menyerah! Ulangi membaca materi Ringkasan 5 Kingdom dan Taksonomi.";
+                document.getElementById('recap-suggestion').innerText = sugg;
+                return;
+            }
+
+            const q = m4Questions[m4Index];
+            document.getElementById('m4-q-num').innerText = m4Index + 1;
+            document.getElementById('m4-question').innerText = q.q;
+            
+            const optsContainer = document.getElementById('m4-options');
+            optsContainer.innerHTML = '';
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-gray-50 border p-4 rounded-lg hover:bg-teal-50 hover:border-teal-300 transition-colors";
+                btn.innerText = opt;
+                btn.onclick = () => answerM4(idx, q.ans);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function answerM4(selected, correct) {
+            if(selected === correct) m4Correct++;
+            m4Index++;
+            loadM4();
+        }
+        loadM4();
+
+        function saveReflection() {
+            showModal("Tersimpan!", "Refleksi belajarmu telah dicatat. Terus semangat belajar!", "success");
+        }
+
+        // --- TGT LOGIC ---
+        // Generating 40 questions according to specific distribution (16 Easy, 12 Med, 12 Hard)
+        const tgtQuestions = [
+            // MUDAH (1-16) - 60 detik
+            { diff: "Mudah", t: 60, q: "Makhluk hidup yang tidak memiliki membran inti sel disebut?", o: ["Eukariotik", "Prokariotik", "Uniseluler", "Multiseluler"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Sistem klasifikasi 5 kingdom diusulkan oleh...", o: ["Carolus Linnaeus", "Ernst Haeckel", "R.H. Whittaker", "Charles Darwin"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Tingkatan takson tertinggi dalam biologi adalah...", o: ["Spesies", "Filum", "Ordo", "Kingdom"], a: 3 },
+            { diff: "Mudah", t: 60, q: "Bakteri termasuk ke dalam kingdom...", o: ["Protista", "Fungi", "Monera", "Plantae"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Makhluk hidup yang dapat membuat makanannya sendiri melalui fotosintesis disebut...", o: ["Heterotrof", "Saprofit", "Parasit", "Autotrof"], a: 3 },
+            { diff: "Mudah", t: 60, q: "Dinding sel pada tumbuhan (Plantae) tersusun atas...", o: ["Kitin", "Selulosa", "Peptidoglikan", "Lipid"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Kelompok hewan yang memiliki tulang belakang disebut...", o: ["Invertebrata", "Avertebrata", "Vertebrata", "Mamalia"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Amoeba dan Paramecium termasuk kingdom...", o: ["Monera", "Protista", "Fungi", "Animalia"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Alat pernapasan utama pada Pisces (Ikan) adalah...", o: ["Paru-paru", "Kulit", "Insang", "Trakea"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Pohon mangga, padi, dan lumut berada di kingdom...", o: ["Fungi", "Plantae", "Protista", "Monera"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Mengapa virus tidak dimasukkan ke dalam 5 kingdom?", o: ["Karena ukurannya kecil", "Karena tidak tersusun atas sel", "Karena dia hewan mikroskopis", "Karena parasit"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Burung (Aves) termasuk hewan berdarah...", o: ["Dingin (Poikiloterm)", "Panas (Homoiloterm)", "Campuran", "Beku"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Hewan berbuku-buku / beruas-ruas seperti serangga masuk filum...", o: ["Mollusca", "Annelida", "Arthropoda", "Nematoda"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Cara reproduksi aseksual utama pada bakteri adalah...", o: ["Tunas", "Spora", "Pembelahan biner", "Fragmentasi"], a: 2 },
+            { diff: "Mudah", t: 60, q: "Dua tingkatan terendah penyusun nama ilmiah (binomial nomenklatur) adalah...", o: ["Famili & Genus", "Genus & Spesies", "Ordo & Spesies", "Kelas & Genus"], a: 1 },
+            { diff: "Mudah", t: 60, q: "Tumbuhan paku berkembang biak menggunakan...", o: ["Biji", "Tunas", "Spora", "Bunga"], a: 2 },
+
+            // SEDANG (17-28) - 120 detik
+            { diff: "Sedang", t: 120, q: "Jika hewan berdarah dingin (Poikiloterm), maka...", o: ["Suhu tubuh tetap stabil", "Suhu tubuh mengikuti lingkungan", "Hanya hidup di kutub", "Bernapas dengan insang"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Perbedaan mendasar antara Monokotil dan Dikotil terletak pada...", o: ["Ada tidaknya akar", "Bentuk tulang daun dan keping biji", "Cara berfotosintesis", "Adanya kambium saja"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Tubuh jamur (Fungi) tersusun atas benang-benang halus yang disebut...", o: ["Miselium", "Rizoid", "Hifa", "Spora"], a: 2 },
+            { diff: "Sedang", t: 120, q: "Euglena memiliki flagel untuk bergerak dan kloroplas untuk fotosintesis. Ia termasuk...", o: ["Protista mirip hewan", "Protista mirip tumbuhan", "Monera", "Plantae"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Cacing tanah memiliki tubuh bersegmen seperti cincin, masuk dalam filum...", o: ["Platyhelminthes", "Nemathelminthes", "Annelida", "Arthropoda"], a: 2 },
+            { diff: "Sedang", t: 120, q: "Hewan bertubuh lunak sering dilindungi cangkang (seperti siput, cumi), masuk dalam filum...", o: ["Mollusca", "Echinodermata", "Porifera", "Coelenterata"], a: 0 },
+            { diff: "Sedang", t: 120, q: "Organisme X multiseluler, dinding sel dari kitin, tidak berklorofil. X adalah...", o: ["Tumbuhan paku", "Jamur tiram", "Sianobakteri", "Terumbu karang"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Bakteri berbentuk batang disebut...", o: ["Kokus", "Vibrio", "Spiril", "Basil"], a: 3 },
+            { diff: "Sedang", t: 120, q: "Tanaman padi (Oryza sativa) dan jagung (Zea mays) berada dalam famili yang sama yaitu Poaceae. Berarti mereka juga berada di takson yang sama pada tingkat...", o: ["Spesies", "Genus", "Ordo (di atas Famili)", "Varietas"], a: 2 },
+            { diff: "Sedang", t: 120, q: "Katak mengalami metamorfosis dan hidup di dua alam. Ruang jantung katak berjumlah...", o: ["2", "3", "4", "5"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Fase dominan pada pergiliran keturunan tumbuhan lumut adalah...", o: ["Sporofit", "Gametofit", "Protalium", "Zigot"], a: 1 },
+            { diff: "Sedang", t: 120, q: "Tumbuhan berbiji terbuka disebut Gymnospermae. Contohnya adalah...", o: ["Mangga & Jeruk", "Pinus & Melinjo", "Padi & Jagung", "Kacang & Kedelai"], a: 1 },
+
+            // SULIT (29-40) - 120 detik
+            { diff: "Sulit", t: 120, q: "Berdasarkan tata nama ganda, nama spesies Hibiscus rosa-sinensis menunjukkan bahwa rosa-sinensis adalah petunjuk...", o: ["Genus", "Spesies", "Epithet spesifik", "Famili"], a: 2 },
+            { diff: "Sulit", t: 120, q: "Plasmodium penyebab malaria yang ditularkan nyamuk Anopheles termasuk ke dalam kelompok...", o: ["Bakteri", "Protista Sporozoa", "Virus", "Jamur Mikroskopis"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Jamur tempe (Rhizopus oligosporus) reproduksi seksualnya membentuk zigospora, sehingga masuk dalam divisi...", o: ["Ascomycota", "Basidiomycota", "Zygomycota", "Deuteromycota"], a: 2 },
+            { diff: "Sulit", t: 120, q: "Paus adalah hewan air penyaring raksasa. Namun ia bernapas dengan paru-paru dan menyusui. Paus adalah...", o: ["Pisces", "Amphibia", "Reptilia", "Mammalia"], a: 3 },
+            { diff: "Sulit", t: 120, q: "Angiospermae mengalami pembuahan ganda. Peleburan inti sperma 2 dengan inti kandung lembaga sekunder menghasilkan...", o: ["Zigot (2n)", "Endosperma (3n)", "Embrio", "Biji"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Bintang laut (Asteroidea) memiliki ciri khas simetri radial dan kaki tabung. Filumnya adalah...", o: ["Coelenterata", "Echinodermata", "Arthropoda", "Porifera"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Organisme penyebab penyakit kolera, Vibrio cholerae, jika dilihat di bawah mikroskop bentuknya menyerupai...", o: ["Batang", "Spiral", "Bola", "Koma"], a: 3 },
+            { diff: "Sulit", t: 120, q: "Puccinia graminis menyebabkan karat pada gandum. Ini merupakan contoh peran merugikan dari kingdom...", o: ["Monera", "Protista", "Fungi", "Plantae"], a: 2 },
+            { diff: "Sulit", t: 120, q: "Arachnida (seperti laba-laba) berbeda dengan Insecta (serangga) karena laba-laba memiliki...", o: ["3 pasang kaki", "4 pasang kaki, tanpa antena", "Sayap", "Tubuh 3 bagian (kepala, dada, perut)"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Mycorrhiza adalah bentuk simbiosis mutualisme antara akar tumbuhan dengan...", o: ["Bakteri fiksasi nitrogen", "Fungi (Jamur)", "Sianobakteri", "Alga hijau"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Ciri 'tubuh berpori, tidak ada jaringan sejati, hidup menetap di dasar laut' mengarah pada klasifikasi...", o: ["Cnidaria (Ubur-ubur)", "Porifera (Spons)", "Nematoda (Cacing gilig)", "Mollusca (Bivalvia)"], a: 1 },
+            { diff: "Sulit", t: 120, q: "Dalam kunci determinasi, pilihan 'Daun bertulang menyirip/menjari' vs 'Daun bertulang sejajar/melengkung' digunakan untuk memisahkan...", o: ["Lumut vs Paku", "Gymnospermae vs Angiospermae", "Dikotil vs Monokotil", "Tumbuhan vs Fungi"], a: 2 }
+        ];
+
+        let tgtState = {
+            group: null,
+            currentQ: 0,
+            score: 0,
+            timer: null,
+            timeLeft: 0,
+            startTime: 0
+        };
+
+        // Initialize Lobby
+        function initTGTLobby() {
+            const grid = document.getElementById('tgt-group-grid');
+            grid.innerHTML = '';
+            
+            // 1. Kolom/Tombol Khusus Guru
+            const guruBtn = document.createElement('button');
+            guruBtn.className = "col-span-2 md:col-span-1 p-6 rounded-xl font-black text-xl border-4 bg-slate-800 text-white border-slate-900 hover:bg-slate-700 transition-all flex flex-col items-center justify-center gap-2 shadow-md";
+            guruBtn.innerHTML = '<i class="fa-solid fa-user-tie text-4xl mb-1 text-teal-300"></i><span>Masuk sbg Guru</span>';
+            guruBtn.onclick = () => loginGuru();
+            grid.appendChild(guruBtn);
+
+            // Check local storage for locked group to enforce "1 device 1 group" policy
+            let lockedGroup = localStorage.getItem('tgt_locked_group');
+
+            // 2. Tombol Kelompok 1-8
+            for(let i = 1; i <= 8; i++) {
+                const btn = document.createElement('button');
+                btn.className = `p-6 rounded-xl font-black text-xl border-4 transition-all flex flex-col items-center justify-center gap-2 shadow-sm ${lockedGroup == i ? 'bg-amber-500 text-white border-amber-600 scale-105' : (lockedGroup ? 'bg-gray-100 text-gray-400 border-gray-200 opacity-60 cursor-not-allowed' : 'bg-white text-amber-600 border-amber-300 hover:bg-amber-50 hover:border-amber-500')}`;
+                btn.innerHTML = `<i class="fa-solid fa-users text-3xl mb-1 ${lockedGroup == i ? 'text-amber-200' : 'text-amber-400'}"></i><span>Kelompok ${i}</span>`;
+                
+                if(!lockedGroup || lockedGroup == i) {
+                    btn.onclick = () => selectTGTGroup(i);
+                }
+                grid.appendChild(btn);
+            }
+        }
+
+        // Fungsi Login Guru & Dashboard Simulasi
+        function loginGuru() {
+            showModal("Mode Guru", "Selamat datang di Dashboard Guru. Anda dapat memantau pergerakan skor kelompok layaknya turnamen *e-sport* sungguhan.", "info", () => {
+                navigateTo('tgt-teacher');
+                initTeacherDashboard();
+            });
+        }
+
+        let teacherSimTimer = null;
+        function initTeacherDashboard() {
+            const grid = document.getElementById('teacher-scores-grid');
+            grid.innerHTML = '';
+            clearInterval(teacherSimTimer);
+
+            let mockScores = [0, 0, 0, 0, 0, 0, 0, 0];
+            for(let i = 1; i <= 8; i++) {
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 border border-slate-700 p-4 rounded-xl text-center shadow-inner flex flex-col justify-center min-h-[120px]";
+                card.innerHTML = `<h4 class="text-slate-400 font-bold mb-2">KELOMPOK ${i}</h4>
+                                  <div class="text-4xl font-black text-amber-400 score-val transition-transform duration-300" id="mock-score-${i}">0</div>`;
+                grid.appendChild(card);
+            }
+
+            teacherSimTimer = setInterval(() => {
+                for(let i = 1; i <= 8; i++) {
+                    if(Math.random() > 0.6) {
+                        mockScores[i-1] += (Math.random() > 0.5 ? 100 : 90);
+                        const scoreEl = document.getElementById(`mock-score-${i}`);
+                        if(scoreEl) {
+                            scoreEl.innerText = mockScores[i-1];
+                            scoreEl.classList.add('scale-125', 'text-white');
+                            setTimeout(() => scoreEl.classList.remove('scale-125', 'text-white'), 300);
+                        }
+                    }
+                }
+            }, 3000);
+        }
+
+        function resetTGTGame() {
+            showModal("Konfirmasi Reset", "Yakin ingin mereset Turnamen? Data simulasi skor dan perangkat terkunci akan dihapus.", "error", () => {
+                localStorage.removeItem('tgt_locked_group');
+                clearInterval(teacherSimTimer);
+                showModal("Berhasil!", "Sesi turnamen telah direset. Silakan mulai kembali.", "success", () => {
+                    initTGTLobby();
+                    navigateTo('tgt-lobby');
+                });
+            });
+        }
+
+        function selectTGTGroup(groupId) {
+            localStorage.setItem('tgt_locked_group', groupId);
+            tgtState.group = groupId;
+            tgtState.currentQ = 0;
+            tgtState.score = 0;
+            document.getElementById('tgt-current-group').innerText = groupId;
+            navigateTo('tgt-game');
+            loadTGTQuestion();
+        }
+
+        function loadTGTQuestion() {
+            if(tgtState.currentQ >= tgtQuestions.length) {
+                // Game End
+                clearInterval(tgtState.timer);
+                showModal("Turnamen Selesai!", `Kelompok ${tgtState.group} berhasil menyelesaikan 40 Soal!<br>Skor Akhir: <strong>${tgtState.score}</strong>`, "success", () => {
+                    localStorage.removeItem('tgt_locked_group'); // unlock for testing
+                    navigateTo('home');
+                });
+                return;
+            }
+
+            const q = tgtQuestions[tgtState.currentQ];
+            document.getElementById('tgt-q-num').innerText = tgtState.currentQ + 1;
+            document.getElementById('tgt-q-diff').innerText = q.diff;
+            document.getElementById('tgt-question').innerText = q.q;
+            document.getElementById('tgt-score-display').innerText = tgtState.score;
+
+            const optsContainer = document.getElementById('tgt-options');
+            optsContainer.innerHTML = '';
+            
+            q.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left bg-white border-2 border-gray-200 p-4 rounded-xl font-semibold hover:border-amber-400 hover:bg-amber-50 transition-colors";
+                btn.innerText = opt;
+                btn.onclick = () => answerTGT(idx);
+                optsContainer.appendChild(btn);
+            });
+
+            startTGTTimer(q.t);
+        }
+
+        function startTGTTimer(seconds) {
+            clearInterval(tgtState.timer);
+            tgtState.timeLeft = seconds;
+            tgtState.startTime = Date.now();
+            const total = seconds;
+            
+            const timeText = document.getElementById('tgt-timer-text');
+            const timeBar = document.getElementById('tgt-timer-bar');
+            
+            timeBar.style.width = '100%';
+            timeBar.classList.replace('bg-red-500', 'bg-emerald-500');
+
+            tgtState.timer = setInterval(() => {
+                tgtState.timeLeft--;
+                
+                let mins = Math.floor(tgtState.timeLeft / 60).toString().padStart(2, '0');
+                let secs = (tgtState.timeLeft % 60).toString().padStart(2, '0');
+                timeText.innerText = `${mins}:${secs}`;
+                
+                let pct = (tgtState.timeLeft / total) * 100;
+                timeBar.style.width = `${pct}%`;
+
+                if(pct < 50 && pct > 20) {
+                    timeBar.classList.replace('bg-emerald-500', 'bg-amber-500');
+                } else if(pct <= 20) {
+                    timeBar.classList.replace('bg-amber-500', 'bg-red-500');
+                }
+
+                if(tgtState.timeLeft <= 0) {
+                    clearInterval(tgtState.timer);
+                    timeText.innerText = "00:00";
+                    handleTGTTimeout();
+                }
+            }, 1000);
+        }
+
+        function answerTGT(selectedIdx) {
+            clearInterval(tgtState.timer);
+            const q = tgtQuestions[tgtState.currentQ];
+            const timeTaken = (Date.now() - tgtState.startTime) / 1000;
+            
+            let pts = 0;
+            if(selectedIdx === q.a) {
+                // Rule TGT: Tercepat dpt 100, benar biasa 90.
+                // Simulasi kecepatan: jika dijawab dalam waktu kurang dari 15 detik (untuk mudah) atau 25 detik (untuk sedang/sulit), dpt 100.
+                const fastThreshold = q.diff === 'Mudah' ? 15 : 25;
+                pts = timeTaken <= fastThreshold ? 100 : 90;
+                tgtState.score += pts;
+                
+                const msg = pts === 100 ? "Luar Biasa! Jawaban Benar & Cepat! (+100)" : "Jawaban Benar! (+90)";
+                showModal("Tepat!", msg, "success", () => {
+                    tgtState.currentQ++;
+                    loadTGTQuestion();
+                });
+            } else {
+                showModal("Kurang Tepat", `Skor +0. Tetap semangat, fokus di soal berikutnya!`, "error", () => {
+                    tgtState.currentQ++;
+                    loadTGTQuestion();
+                });
+            }
+        }
+
+        function handleTGTTimeout() {
+            showModal("Waktu Habis!", "Waktu untuk soal ini sudah habis. Skor +0.", "error", () => {
+                tgtState.currentQ++;
+                loadTGTQuestion();
+            });
+        }
+
+        // Initialize Lobby on script load
+        initTGTLobby();
+
+    </script>
+</body>
+</html>
